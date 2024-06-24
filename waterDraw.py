@@ -82,21 +82,19 @@ def getEvent():
     for event in touchpad.path.read_loop():
         if not running:
             break
-        if event.code == 53 and not touchpad.eventX:
+        if event.code == 53:
             touchpadLock.acquire()
             ### Touchpad object is locked
 
-            touchpad.setOldX()
             touchpad.setX(event.value)
             touchpad.newEventX() 
 
             ### Touchpad object is released
             touchpadLock.release()
-        elif event.code == 54 and not touchpad.eventY:
+        elif event.code == 54:
             touchpadLock.acquire()
             ### Touchpad object is locked
 
-            touchpad.setOldY()
             touchpad.setY(event.value)
             touchpad.newEventY() 
 
@@ -113,8 +111,7 @@ def drawLines():
         ### Touchpad object is locked
 
         if touchpad.eventX and touchpad.eventY:
-            ##connect = (time() - lastTouch) < 0.01
-                
+            
             tempX = touchpad.getX() * int(SCREENX) / touchpad.getMaxX()
             tempY = touchpad.getY() * int(SCREENY) / touchpad.getMaxY()
             canvas.create_oval(tempX - BRUSHSIZE, tempY - BRUSHSIZE, tempX + BRUSHSIZE, tempY + BRUSHSIZE, fill='black')
@@ -122,6 +119,8 @@ def drawLines():
                 tempOldX = touchpad.getOldX() * int(SCREENX) / touchpad.getMaxX()
                 tempOldY = touchpad.getOldY() * int(SCREENY) / touchpad.getMaxY()
                 canvas.create_line(tempOldX, tempOldY, tempX, tempY, width=2*BRUSHSIZE, fill='black')
+            touchpad.setOldX()
+            touchpad.setOldY()
             lastTouch = time()
             touchpad.endEvent()
 
@@ -138,6 +137,8 @@ def main():
         drawLoop.start()
         root.mainloop()
     except KeyboardInterrupt:
+        pass
+    finally:
         running = False
         eventLoop.join(timeout=1)
         drawLoop.join(timeout=1)
