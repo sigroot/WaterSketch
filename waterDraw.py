@@ -10,7 +10,7 @@ BRUSHSIZE = 5.0
 BLANKSECONDS = 2.0
 SCREENX = "800"
 SCREENY = "500"
-STICKTIME = 0.05
+STICKTIME = 0.1
 
 # Define a touchpad
 class MyTouchpad:
@@ -112,12 +112,12 @@ def drawLines():
 
         if touchpad.eventX and touchpad.eventY:
             
-            tempX = touchpad.getX() * int(SCREENX) / touchpad.getMaxX()
-            tempY = touchpad.getY() * int(SCREENY) / touchpad.getMaxY()
+            tempX = touchpad.getX() * root.winfo_width() / touchpad.getMaxX()
+            tempY = touchpad.getY() * root.winfo_height() / touchpad.getMaxY()
             canvas.create_oval(tempX - BRUSHSIZE, tempY - BRUSHSIZE, tempX + BRUSHSIZE, tempY + BRUSHSIZE, fill='black')
             if (time() - lastTouch) < STICKTIME:
-                tempOldX = touchpad.getOldX() * int(SCREENX) / touchpad.getMaxX()
-                tempOldY = touchpad.getOldY() * int(SCREENY) / touchpad.getMaxY()
+                tempOldX = touchpad.getOldX() * root.winfo_width() / touchpad.getMaxX()
+                tempOldY = touchpad.getOldY() * root.winfo_height() / touchpad.getMaxY()
                 canvas.create_line(tempOldX, tempOldY, tempX, tempY, width=2*BRUSHSIZE, fill='black')
             touchpad.setOldX()
             touchpad.setOldY()
