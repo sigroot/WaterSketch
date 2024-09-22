@@ -1,3 +1,5 @@
+#Written by Samuel Armstrong
+
 import evdev
 from threading import Thread
 from threading import Lock
